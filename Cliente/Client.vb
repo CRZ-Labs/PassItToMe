@@ -13,6 +13,7 @@ Public Class Client
     End Sub
     Private Sub Client_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         Try
+            ENVIARTODOS("[BYE]")
             CERRARTODO()
             Process.Start(DIRCommons & "\Selector.exe")
         Catch
@@ -24,7 +25,8 @@ Public Class Client
         Try
             ListBox1.Items.Clear()
             For Each item As String In ClientFileListInfo
-                ListBox1.Items.Add(item)
+                ListBox1.Items.Add(IO.Path.GetFileName(item.Split("|")(0)))
+                ListBox1.TopIndex = ListBox1.Items.Count - 1
             Next
         Catch ex As Exception
             AddToLog("IndexFilesToList@Client", "Error: " & ex.Message, True)
@@ -33,17 +35,18 @@ Public Class Client
 
     Private Sub ListBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBox1.SelectedIndexChanged
         Dim fileInfo As String() = ClientFileListInfo(ListBox1.SelectedIndex).ToString.Split("|")
-        RichTextBox1.Text = "File name: " & fileInfo(0) &
+        RichTextBox1.Text = "File name: " & IO.Path.GetFileName(fileInfo(0)) &
+            vbCrLf & "Remote path: " & fileInfo(0) &
+            vbCrLf & "Local path: " & DefaultSavePath & "\" & IO.Path.GetFileName(fileInfo(0)) &
             vbCrLf & "File format: " & fileInfo(1) &
             vbCrLf & "File size: " & fileInfo(2) &
             vbCrLf & "User: " & fileInfo(3)
     End Sub
-
-    Private Sub RichTextBox1_TextChanged(sender As Object, e As EventArgs) Handles RichTextBox1.TextChanged
-
+    Private Sub ListBox1_MouseDoubleClick(sender As Object, e As MouseEventArgs) Handles ListBox1.MouseDoubleClick
+        Process.Start(DefaultSavePath & "\" & IO.Path.GetFileName(ClientFileListInfo(ListBox1.SelectedIndex).ToString.Split("|")(0)))
     End Sub
-End Class
-Module General
+
+#Region "General"
     Public DIRCommons As String = "C:\Users\" & Environment.UserName & "\AppData\Local\CRZ_Labs\PassItToMe"
 
     Public ConfigRegedit As RegistryKey
@@ -52,7 +55,7 @@ Module General
     Public ClientIP As String = "localhost"
     Public ClientPort As Integer = 21110
     Public ClientChatPort As Integer = 21111
-    Public AskForIncoming As Boolean = True
+    Public DontAskForIncoming As Boolean = True
     Public DefaultSavePath As String = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
 
     Public ServerIP As String = "localhost"
@@ -175,7 +178,7 @@ Module General
 
             ClientFileListInfo.Add(fileInfo)
 
-            Client.IndexFilesToList()
+            IndexFilesToList()
 
             Dim TAMAÑOBUFFER As Integer = 1024
             Dim ARCHIVORECIBIDO As Byte() = New Byte(TAMAÑOBUFFER - 1) {}
@@ -193,7 +196,7 @@ Module General
                 If SERVIDOR_TCP.Pending Then
                     CLIENTE_TCP = SERVIDOR_TCP.AcceptTcpClient
                     NS = CLIENTE_TCP.GetStream
-                    If Client.CheckBox1.CheckState = CheckState.Unchecked Then
+                    If Not DontAskForIncoming Then
                         RESULTADO = MessageBox.Show("Fichero entrante..." & vbCrLf & vbCrLf & fileInfoMessage & vbCrLf & vbCrLf & "¿Recibirlo?", "Archivo entrante", MessageBoxButtons.YesNo)
                         If RESULTADO = Windows.Forms.DialogResult.No Then
                             ENVIARTODOS("[REJECTED]")
@@ -213,7 +216,7 @@ Module General
                     End If
                     NS.Close()
                     CLIENTE_TCP.Close()
-                    If Client.CheckBox1.CheckState = CheckState.Unchecked Then
+                    If Not DontAskForIncoming Then
                         MsgBox("Archivo recibido correctamente!", MsgBoxStyle.OkOnly, "Archivo entrante")
                     End If
                     FIN = 1
@@ -301,13 +304,49 @@ Module General
                 Dim myMsg As String() = MENSAJE.Split(">")
                 RecibirFichero(myMsg(1))
             ElseIf MENSAJE.StartsWith("[MULTI]") Then '[MULTI] Preparacion para multiples ficheros
-                Client.CheckBox1.CheckState = CheckState.Checked
+                CheckBox1.Enabled = False
+                ClientFileListInfo.Clear()
+                ListBox1.Items.Clear()
+                DontAskForIncoming = True
                 ENVIARTODOS("[MULTIREADY]")
             ElseIf MENSAJE.StartsWith("[MULTIEND]") Then '[MULTIEND] Fin de multiples ficheros
+                CheckBox1.Enabled = True
+                ListBox1.Items.RemoveAt(0)
+                ClientFileListInfo.RemoveAt(0)
                 Process.Start(DefaultSavePath)
+            ElseIf MENSAJE.StartsWith("[OPEN]") Then '[OPEN] Abrir fichero
+                Dim openArgs As String() = MENSAJE.Split(">")
+                Dim openCanDoIt As Boolean = False
+                Dim localFile As String = DefaultSavePath & "\" & IO.Path.GetFileName(ClientFileListInfo(openArgs(1)).ToString.Split("|")(0))
+                If Not DontAskForIncoming Then
+                    If MessageBox.Show("El equipo remoto quiere inciar el fichero '" & IO.Path.GetFileName(localFile) & "'" & vbCrLf & "¿Desea abrirlo?", "Confirmar abrir", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                        openCanDoIt = True
+                    End If
+                Else
+                    openCanDoIt = True
+                End If
+                If openCanDoIt Then
+                    Process.Start(localFile)
+                End If
+            ElseIf MENSAJE.StartsWith("[DELETE]") Then '[DELETE] Eliminar fichero
+                Dim deleteArgs As String() = MENSAJE.Split(">")
+                Dim deleteCanDoIt As Boolean = False
+                Dim localFile As String = DefaultSavePath & "\" & IO.Path.GetFileName(ClientFileListInfo(deleteArgs(1)).ToString.Split("|")(0))
+                If Not DontAskForIncoming Then
+                    If MessageBox.Show("El equipo remoto quiere eliminar el fichero '" & IO.Path.GetFileName(localFile) & "'" & vbCrLf & "¿Desea eliminarlo?", "Confirmar eliminar", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                        deleteCanDoIt = True
+                    End If
+                Else
+                    deleteCanDoIt = True
+                End If
+                If deleteCanDoIt Then
+                    If My.Computer.FileSystem.FileExists(localFile) Then
+                        My.Computer.FileSystem.DeleteFile(localFile)
+                    End If
+                End If
             ElseIf MENSAJE.StartsWith("[BYE]") Then '[BYE] Conexion terminada
-                MsgBox("Se ha cerrado la conexion.", MsgBoxStyle.Critical, "Conexion finalizada")
-                Client.Close()
+                MsgBox("Se ha cerrado la conexión.", MsgBoxStyle.Critical, "Conexión finalizada")
+                Close()
             Else
                 ENVIARTODOS(MENSAJE)
             End If
@@ -350,4 +389,5 @@ Module General
         Next
     End Sub
 #End Region
-End Module
+#End Region
+End Class

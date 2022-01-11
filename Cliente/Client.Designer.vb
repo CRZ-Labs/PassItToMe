@@ -32,13 +32,12 @@ Partial Class Client
         'CheckBox1
         '
         Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Location = New System.Drawing.Point(342, 432)
+        Me.CheckBox1.Location = New System.Drawing.Point(12, 71)
         Me.CheckBox1.Name = "CheckBox1"
         Me.CheckBox1.Size = New System.Drawing.Size(88, 17)
         Me.CheckBox1.TabIndex = 7
         Me.CheckBox1.Text = "No preguntar"
         Me.CheckBox1.UseVisualStyleBackColor = True
-        Me.CheckBox1.Visible = False
         '
         'Label1
         '
@@ -46,35 +45,38 @@ Partial Class Client
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(12, 9)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(217, 31)
+        Me.Label1.Size = New System.Drawing.Size(366, 31)
         Me.Label1.TabIndex = 6
-        Me.Label1.Text = "Cliente Receptor"
+        Me.Label1.Text = "Cliente Receptor de Ficheros"
         '
         'RichTextBox1
         '
-        Me.RichTextBox1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.RichTextBox1.Location = New System.Drawing.Point(-87, -301)
+        Me.RichTextBox1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.RichTextBox1.BackColor = System.Drawing.SystemColors.Control
+        Me.RichTextBox1.Location = New System.Drawing.Point(293, 94)
         Me.RichTextBox1.Name = "RichTextBox1"
-        Me.RichTextBox1.Size = New System.Drawing.Size(324, 355)
+        Me.RichTextBox1.ReadOnly = True
+        Me.RichTextBox1.Size = New System.Drawing.Size(319, 251)
         Me.RichTextBox1.TabIndex = 5
         Me.RichTextBox1.Text = ""
-        Me.RichTextBox1.Visible = False
         '
         'ListBox1
         '
-        Me.ListBox1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.ListBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.ListBox1.FormattingEnabled = True
-        Me.ListBox1.Location = New System.Drawing.Point(12, -301)
+        Me.ListBox1.Location = New System.Drawing.Point(12, 94)
         Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(324, 355)
+        Me.ListBox1.Size = New System.Drawing.Size(275, 251)
         Me.ListBox1.TabIndex = 4
-        Me.ListBox1.Visible = False
         '
         'Client
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(249, 66)
+        Me.ClientSize = New System.Drawing.Size(624, 361)
         Me.Controls.Add(Me.CheckBox1)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.RichTextBox1)

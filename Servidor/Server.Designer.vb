@@ -22,6 +22,7 @@ Partial Class Server
     'No lo modifique con el editor de código.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Server))
         Me.BTN_Limpiar = New System.Windows.Forms.Button()
         Me.BTN_EnviarTodo = New System.Windows.Forms.Button()
@@ -29,7 +30,14 @@ Partial Class Server
         Me.BTN_Quitar = New System.Windows.Forms.Button()
         Me.BTN_Agregar = New System.Windows.Forms.Button()
         Me.ListBox1 = New System.Windows.Forms.ListBox()
+        Me.CMS_Options = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.AbrirEnLocalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AbrirEnRemotoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.EliminarEnLocalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.EliminarEnRemotoToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LBL_Title = New System.Windows.Forms.Label()
+        Me.CMS_Options.SuspendLayout()
         Me.SuspendLayout()
         '
         'BTN_Limpiar
@@ -87,11 +95,47 @@ Partial Class Server
         Me.ListBox1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ListBox1.ContextMenuStrip = Me.CMS_Options
         Me.ListBox1.FormattingEnabled = True
         Me.ListBox1.Location = New System.Drawing.Point(12, 94)
         Me.ListBox1.Name = "ListBox1"
         Me.ListBox1.Size = New System.Drawing.Size(655, 355)
         Me.ListBox1.TabIndex = 8
+        '
+        'CMS_Options
+        '
+        Me.CMS_Options.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AbrirEnLocalToolStripMenuItem, Me.AbrirEnRemotoToolStripMenuItem, Me.ToolStripMenuItem1, Me.EliminarEnLocalToolStripMenuItem, Me.EliminarEnRemotoToolStripMenuItem})
+        Me.CMS_Options.Name = "CMS_Options"
+        Me.CMS_Options.Size = New System.Drawing.Size(176, 98)
+        '
+        'AbrirEnLocalToolStripMenuItem
+        '
+        Me.AbrirEnLocalToolStripMenuItem.Name = "AbrirEnLocalToolStripMenuItem"
+        Me.AbrirEnLocalToolStripMenuItem.Size = New System.Drawing.Size(175, 22)
+        Me.AbrirEnLocalToolStripMenuItem.Text = "Abrir en local"
+        '
+        'AbrirEnRemotoToolStripMenuItem
+        '
+        Me.AbrirEnRemotoToolStripMenuItem.Name = "AbrirEnRemotoToolStripMenuItem"
+        Me.AbrirEnRemotoToolStripMenuItem.Size = New System.Drawing.Size(175, 22)
+        Me.AbrirEnRemotoToolStripMenuItem.Text = "Abrir en remoto"
+        '
+        'ToolStripMenuItem1
+        '
+        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(172, 6)
+        '
+        'EliminarEnLocalToolStripMenuItem
+        '
+        Me.EliminarEnLocalToolStripMenuItem.Name = "EliminarEnLocalToolStripMenuItem"
+        Me.EliminarEnLocalToolStripMenuItem.Size = New System.Drawing.Size(175, 22)
+        Me.EliminarEnLocalToolStripMenuItem.Text = "Eliminar en local"
+        '
+        'EliminarEnRemotoToolStripMenuItem
+        '
+        Me.EliminarEnRemotoToolStripMenuItem.Name = "EliminarEnRemotoToolStripMenuItem"
+        Me.EliminarEnRemotoToolStripMenuItem.Size = New System.Drawing.Size(175, 22)
+        Me.EliminarEnRemotoToolStripMenuItem.Text = "Eliminar en remoto"
         '
         'LBL_Title
         '
@@ -99,9 +143,9 @@ Partial Class Server
         Me.LBL_Title.Font = New System.Drawing.Font("Microsoft Sans Serif", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LBL_Title.Location = New System.Drawing.Point(12, 9)
         Me.LBL_Title.Name = "LBL_Title"
-        Me.LBL_Title.Size = New System.Drawing.Size(946, 31)
+        Me.LBL_Title.Size = New System.Drawing.Size(355, 31)
         Me.LBL_Title.TabIndex = 7
-        Me.LBL_Title.Text = "Servidor Emisor de Ficheros, dios de todo. Ruega por nosotros los pecadores"
+        Me.LBL_Title.Text = "Servidor Emisor de Ficheros"
         '
         'Server
         '
@@ -121,6 +165,7 @@ Partial Class Server
         Me.Name = "Server"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Servidor"
+        Me.CMS_Options.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -133,4 +178,10 @@ Partial Class Server
     Friend WithEvents BTN_Agregar As Button
     Friend WithEvents ListBox1 As ListBox
     Friend WithEvents LBL_Title As Label
+    Friend WithEvents CMS_Options As ContextMenuStrip
+    Friend WithEvents AbrirEnLocalToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents AbrirEnRemotoToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem1 As ToolStripSeparator
+    Friend WithEvents EliminarEnLocalToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents EliminarEnRemotoToolStripMenuItem As ToolStripMenuItem
 End Class

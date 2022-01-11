@@ -1,4 +1,5 @@
-﻿Imports System
+﻿Imports System.Resources
+Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 
@@ -8,7 +9,7 @@ Imports System.Runtime.InteropServices
 
 ' Revisar los valores de los atributos del ensamblado
 
-<Assembly: AssemblyTitle("Selector de funcion para PassItToMe")>
+<Assembly: AssemblyTitle("Selector de función para PassItToMe")>
 <Assembly: AssemblyDescription("Elige entre emisor o receptor")>
 <Assembly: AssemblyCompany("CRZ Labs")>
 <Assembly: AssemblyProduct("")>
@@ -33,3 +34,4 @@ Imports System.Runtime.InteropServices
 
 <Assembly: AssemblyVersion("1.0.0.0")>
 <Assembly: AssemblyFileVersion("1.0.0.0")>
+<Assembly: NeutralResourcesLanguage("es")>

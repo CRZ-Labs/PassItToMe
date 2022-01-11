@@ -1,4 +1,5 @@
-﻿Imports System
+﻿Imports System.Resources
+Imports System
 Imports System.Reflection
 Imports System.Runtime.InteropServices
 
@@ -9,7 +10,7 @@ Imports System.Runtime.InteropServices
 ' Revisar los valores de los atributos del ensamblado
 
 <Assembly: AssemblyTitle("Emisor de ficheros")>
-<Assembly: AssemblyDescription("Envia ficheros por la red con TCP/IP")>
+<Assembly: AssemblyDescription("Envía ficheros por la red con TCP/IP")>
 <Assembly: AssemblyCompany("CRZ Labs")>
 <Assembly: AssemblyProduct("Take It From Me")>
 <Assembly: AssemblyCopyright("Copyright © 2022 CRZ Labs. Algunos derechos reservados")>
@@ -33,3 +34,4 @@ Imports System.Runtime.InteropServices
 
 <Assembly: AssemblyVersion("1.0.0.0")>
 <Assembly: AssemblyFileVersion("1.0.0.0")>
+<Assembly: NeutralResourcesLanguage("es")>

@@ -32,7 +32,7 @@ Partial Class Main
         '
         'LBL_ReceptorDesc
         '
-        Me.LBL_ReceptorDesc.Location = New System.Drawing.Point(241, 133)
+        Me.LBL_ReceptorDesc.Location = New System.Drawing.Point(241, 127)
         Me.LBL_ReceptorDesc.Name = "LBL_ReceptorDesc"
         Me.LBL_ReceptorDesc.Size = New System.Drawing.Size(147, 40)
         Me.LBL_ReceptorDesc.TabIndex = 9
@@ -41,16 +41,17 @@ Partial Class Main
         '
         'LBL_EmisorDesc
         '
-        Me.LBL_EmisorDesc.Location = New System.Drawing.Point(30, 133)
+        Me.LBL_EmisorDesc.Location = New System.Drawing.Point(30, 127)
         Me.LBL_EmisorDesc.Name = "LBL_EmisorDesc"
         Me.LBL_EmisorDesc.Size = New System.Drawing.Size(147, 40)
         Me.LBL_EmisorDesc.TabIndex = 8
-        Me.LBL_EmisorDesc.Text = "Envia ficheros al Receptor"
+        Me.LBL_EmisorDesc.Text = "Envía ficheros al Receptor"
         Me.LBL_EmisorDesc.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
         'BTN_Receptor
         '
-        Me.BTN_Receptor.Location = New System.Drawing.Point(238, 82)
+        Me.BTN_Receptor.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.BTN_Receptor.Location = New System.Drawing.Point(238, 76)
         Me.BTN_Receptor.Name = "BTN_Receptor"
         Me.BTN_Receptor.Size = New System.Drawing.Size(150, 48)
         Me.BTN_Receptor.TabIndex = 7
@@ -59,7 +60,8 @@ Partial Class Main
         '
         'BTN_Emisor
         '
-        Me.BTN_Emisor.Location = New System.Drawing.Point(27, 82)
+        Me.BTN_Emisor.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.BTN_Emisor.Location = New System.Drawing.Point(27, 76)
         Me.BTN_Emisor.Name = "BTN_Emisor"
         Me.BTN_Emisor.Size = New System.Drawing.Size(150, 48)
         Me.BTN_Emisor.TabIndex = 6
@@ -74,13 +76,13 @@ Partial Class Main
         Me.LBL_Title.Name = "LBL_Title"
         Me.LBL_Title.Size = New System.Drawing.Size(294, 31)
         Me.LBL_Title.TabIndex = 5
-        Me.LBL_Title.Text = "Seleccione una funcion"
+        Me.LBL_Title.Text = "Seleccione una función"
         '
         'Main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(414, 221)
+        Me.ClientSize = New System.Drawing.Size(414, 191)
         Me.Controls.Add(Me.LBL_ReceptorDesc)
         Me.Controls.Add(Me.LBL_EmisorDesc)
         Me.Controls.Add(Me.BTN_Receptor)
@@ -92,7 +94,7 @@ Partial Class Main
         Me.MinimizeBox = False
         Me.Name = "Main"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "Seleccion de funcion"
+        Me.Text = "Selección de función | PassItToMe"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

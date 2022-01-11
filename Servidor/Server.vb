@@ -13,6 +13,7 @@ Public Class Server
     End Sub
     Private Sub Server_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         Try
+            ENVIAR("[BYE]")
             Process.Start(DIRCommons & "\Selector.exe")
         Catch
         End Try
@@ -38,11 +39,9 @@ Public Class Server
     End Sub
 
     Private Sub BTN_Enviar_Click(sender As Object, e As EventArgs) Handles BTN_Enviar.Click
-        'enviar uno (seleccionado)
         ENVIAR("[PRESEND]")
     End Sub
     Private Sub BTN_EnviarTodo_Click(sender As Object, e As EventArgs) Handles BTN_EnviarTodo.Click
-        'enviar todos (todos los de la lista)
         BTN_EnviarTodo.Enabled = False
         ListBox1.SelectedIndex = 0
         ENVIAR("[MULTI]")
@@ -50,17 +49,38 @@ Public Class Server
         ThreadEnvios = New Threading.Thread(AddressOf EnvioCola)
         ThreadEnvios.Start()
     End Sub
-
     Private Sub BTN_Limpiar_Click(sender As Object, e As EventArgs) Handles BTN_Limpiar.Click
         ListBox1.Items.Clear()
         ServerFileList.Clear()
     End Sub
-
     Private Sub ListBox1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBox1.SelectedIndexChanged
         ActualFileItem = ServerFileList(ListBox1.SelectedIndex)
     End Sub
-End Class
-Module General
+
+    Private Sub AbrirEnLocalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AbrirEnLocalToolStripMenuItem.Click
+        Process.Start(ServerFileList(ListBox1.SelectedIndex))
+    End Sub
+    Private Sub AbrirEnRemotoToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AbrirEnRemotoToolStripMenuItem.Click
+        ENVIAR("[OPEN]>" & ListBox1.SelectedIndex)
+    End Sub
+    Private Sub EliminarEnLocalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EliminarEnLocalToolStripMenuItem.Click
+        If MessageBox.Show("¿Desea eliminar el fichero '" & ServerFileList(ListBox1.SelectedIndex) & "' de su computadora?", "Confirmar eliminar", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+            ServerFileList.RemoveAt(ListBox1.SelectedIndex)
+            ListBox1.Items.RemoveAt(ListBox1.SelectedIndex)
+            If My.Computer.FileSystem.FileExists(ServerFileList(ListBox1.SelectedIndex)) Then
+                My.Computer.FileSystem.DeleteFile(ServerFileList(ListBox1.SelectedIndex))
+            End If
+        End If
+    End Sub
+    Private Sub EliminarEnRemotoToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EliminarEnRemotoToolStripMenuItem.Click
+        If MessageBox.Show("¿Desea eliminar el fichero '" & ServerFileList(ListBox1.SelectedIndex) & "' del computador remoto?", "Confirmar eliminar", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+            ENVIAR("[DELETE]>" & ListBox1.SelectedIndex)
+            ServerFileList.RemoveAt(ListBox1.SelectedIndex)
+            ListBox1.Items.RemoveAt(ListBox1.SelectedIndex)
+        End If
+    End Sub
+
+#Region "General"
     Public DIRCommons As String = "C:\Users\" & Environment.UserName & "\AppData\Local\CRZ_Labs\PassItToMe"
 
     Public ConfigRegedit As RegistryKey
@@ -143,10 +163,10 @@ Module General
                     ServerChatPort = INserverPort
                     SaveConfig()
                 Else
-                    Server.Close()
+                    Me.Close()
                 End If
             Else
-                Server.Close()
+                Me.Close()
             End If
             Starter()
         Catch ex As Exception
@@ -225,16 +245,16 @@ Module General
     Public ClienteOKAY As Boolean = False
     Dim SwitchPreparedClient As Boolean = True
     Public ThreadEnvios As Threading.Thread
-    Dim indice As Integer = 0
+    Dim indiceCola As Integer = 0
     Sub EnvioCola()
         Try
             'verifica que puede enviar el fichero actual
-            While indice < ServerFileList.Count
-                If (indice + 1) > ServerFileList.Count Then
+            While indiceCola < ServerFileList.Count
+                If (indiceCola + 1) > ServerFileList.Count Then
                     Exit While
                 End If
                 While ClienteMULTIREADY 'Activa al recibir [MULTIREADY]
-                    If (indice + 1) > ServerFileList.Count Then
+                    If (indiceCola + 1) > ServerFileList.Count Then
                         Exit While
                     End If
                     If SwitchPreparedClient Then
@@ -242,21 +262,22 @@ Module General
                         SwitchPreparedClient = False
                     End If
                     While ClienteREADY 'Activa al recibir [READY]
-                        ActualFileItem = ServerFileList(indice)
+                        ActualFileItem = ServerFileList(indiceCola)
                         While ClienteOKAY 'Activa al recibir [OKAY]
                             ENVIAR("[PRESEND]")
                             ClienteOKAY = False
                             ClienteREADY = False
                             SwitchPreparedClient = True
-                            If (indice + 1) > ServerFileList.Count Then
+                            If (indiceCola + 1) > ServerFileList.Count Then
                                 Exit While
                             End If
-                            indice += 1
+                            indiceCola += 1
                         End While
                     End While
                 End While
             End While
-            Server.BTN_EnviarTodo.Enabled = True
+            indiceCola = 0
+            BTN_EnviarTodo.Enabled = True
             ClienteMULTIREADY = False
             ClienteREADY = False
             ClienteOKAY = False
@@ -317,18 +338,18 @@ Module General
                     ElseIf MENSAJE.StartsWith("[OKAY]") Then '[OKAY] Envio correcto
                         ClienteOKAY = True
                         If AskForActions Then
-                            MsgBox("Fichero enviado y recibido correctamente", MsgBoxStyle.Information, "Confirmacion")
+                            MsgBox("Fichero enviado y recibido correctamente", MsgBoxStyle.Information, "Confirmación")
                         End If
                     ElseIf MENSAJE.StartsWith("[ERROR]") Then '[ERROR] Error al recibir
                         If AskForActions Then
-                            If MessageBox.Show("El envio fallo." & vbCrLf & MENSAJE & vbCrLf & "¿Reenviar?", "Error de envio", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+                            If MessageBox.Show("Él envió fallo." & vbCrLf & MENSAJE & vbCrLf & "¿Reenviar?", "Envió", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
                                 Exit Sub
                             End If
                         End If
                         ENVIAR("[PRESEND]")
                     ElseIf MENSAJE.StartsWith("[REJECTED]") Then '[REJECTED] Recibo rechazado
                         If AskForActions Then
-                            If MessageBox.Show("El envio del fichero fue rechazado por el cliente." & vbCrLf & "¿Reenviar?", "Envio rechazado", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+                            If MessageBox.Show("El envío del fichero fue rechazado por el cliente." & vbCrLf & "¿Reenviar?", "Envió rechazado", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
                                 Exit Sub
                             End If
                         End If
@@ -336,8 +357,8 @@ Module General
                     ElseIf MENSAJE.StartsWith("[MULTIREADY]") Then '[MULTIREADY] Listo para ficheros multiples
                         ClienteMULTIREADY = True
                     ElseIf MENSAJE.StartsWith("[BYE]") Then '[BYE] Conexion terminada
-                        MsgBox("Se ha cerrado la conexion.", MsgBoxStyle.Critical, "Conexion finalizada")
-                        Server.Close()
+                        MsgBox("Se ha cerrado la conexión.", MsgBoxStyle.Critical, "Conexión finalizada")
+                        Me.Close()
                     End If
                 End If
             End If
@@ -346,4 +367,5 @@ Module General
         End Try
     End Sub
 #End Region
-End Module
+#End Region
+End Class
